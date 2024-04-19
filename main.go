@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,10 +11,20 @@ import (
 
 func main() {
 	fmt.Print("Enter the directory path: ")
-	var path string
-	fmt.Scanln(&path)
+	reader := bufio.NewReader(os.Stdin)
+	path, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error reading input:", err)
+		return
+	}
 
-	err := os.Chdir(path)
+	// Remove the newline character at the end of the input
+	path = strings.TrimSpace(path)
+
+	fmt.Println("path: ", path)
+	path = filepath.FromSlash(path)
+
+	err = os.Chdir(path)
 	if err != nil {
 		fmt.Println("Error changing directory: ", err)
 		return
